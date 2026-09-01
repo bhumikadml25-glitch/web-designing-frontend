@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhumika Dandare</title>
+ 
+    <link rel="stylesheet" href="./src/output.css">
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
+
+    <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl">
+
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">
+            Grade Calculator
+        </h2>
+
+        <label class="block font-semibold text-gray-700 mb-2">
+            Marks of first practical:
+        </label>
+
+        <input
+            type="text"
+            id="p1"
+            placeholder="Practical Marks"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 mb-4
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+
+        <label class="block font-semibold text-gray-700 mb-2">
+            Marks of second practical:
+        </label>
+
+        <input
+            type="text"
+            id="p2"
+            placeholder="Practical Marks"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 mb-4
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+
+        <label class="block font-semibold text-gray-700 mb-2">
+            Marks of Third practical:
+        </label>
+
+        <input
+            type="text"
+            id="p3"
+            placeholder="Practical Marks"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 mb-5
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+
+        <button
+            onclick="Calculateresult()"
+            class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg
+                   hover:bg-purple-700 transition duration-300"
+        >
+            Submit
+        </button>
+
+        <br><br>
+
+        <!-- Result -->
+        <div id="result" class="hidden bg-purple-50 rounded-xl p-5">
+
+            <p class="text-lg font-semibold text-gray-700">
+                Total:
+                <span id="total" class="text-purple-700"></span>
+            </p>
+
+            <p class="text-lg font-semibold text-gray-700 mt-2">
+                Percentage:
+                <span id="percentage" class="text-purple-700"></span>
+            </p>
+
+            <p class="text-lg font-semibold text-gray-700 mt-2">
+                Grade:
+                <span id="grade" class="text-green-600 font-bold"></span>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function Calculateresult() {
+
+            const p1 = Number(document.getElementById("p1").value);
+            const p2 = Number(document.getElementById("p2").value);
+            const p3 = Number(document.getElementById("p3").value);
+
+            const maxMarks = 300;
+
+            const total = p1 + p2 + p3;
+
+            const percentage = (total / maxMarks) * 100;
+
+            let grade = " ";
+
+            if (percentage >= 90) {
+                grade = "A+ Excellent";
+            }
+            else if (percentage >= 80) {
+                grade = "A very Good";
+            }
+            else if (percentage >= 70) {
+                grade = "B Good";
+            }
+            else if (percentage >= 60) {
+                grade = "C statisfied";
+            }
+            else if (percentage >= 40) {
+                grade = "D Pass";
+            }
+            else {
+                grade = "F";
+            }
+
+            document.getElementById("total").innerText =
+                total + " / 300";
+
+            document.getElementById("percentage").innerText =
+                percentage.toFixed(2) + "%";
+
+            document.getElementById("grade").innerText =
+                grade;
+
+            document.getElementById("result").classList.remove("hidden");
+        }
+
+    </script>
+
+</body>
+</html>

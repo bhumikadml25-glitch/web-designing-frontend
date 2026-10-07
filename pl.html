@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CM25012</title>
+
+    <!-- Tailwind CSS CDN -->
+    <link rel="stylesheet" href="./src/output.css">
+
+
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white transition-all">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="bg-indigo-600 text-white px-6 py-4 shadow-lg">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <div>
+            <h1 class="text-2xl font-bold">📊 AttendEase</h1>
+            <p class="text-sm text-indigo-200">
+                Employee Attendance Management
+            </p>
+        </div>
+
+        <button onclick="toggleDarkMode()"
+            class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold">
+            🌙
+        </button>
+    </div>
+</nav>
+
+
+<!-- ================= TABS ================= -->
+<div class="max-w-7xl mx-auto px-4 mt-6">
+
+    <div class="flex flex-wrap gap-2 bg-white dark:bg-gray-800 p-3 rounded-xl shadow">
+
+        <button onclick="showTab('dashboard')"
+            class="tab-btn bg-indigo-600 text-white px-4 py-2 rounded-lg">
+            📊 Dashboard
+        </button>
+
+        <button onclick="showTab('attendance')"
+            class="tab-btn px-4 py-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-gray-700">
+            👥 Attendance
+        </button>
+
+        <button onclick="showTab('percentage')"
+            class="tab-btn px-4 py-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-gray-700">
+            📈 Percentage
+        </button>
+
+        <button onclick="showTab('employees')"
+            class="tab-btn px-4 py-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-gray-700">
+            ➕ Employees
+        </button>
+
+        <button onclick="showTab('report')"
+            class="tab-btn px-4 py-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-gray-700">
+            📅 Report
+        </button>
+
+    </div>
+</div>
+
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-7xl mx-auto px-4 py-6">
+
+
+<!-- ================= DASHBOARD ================= -->
+<section id="dashboard" class="tab-content">
+
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold">Welcome to AttendEase 👋</h2>
+        <p class="text-gray-500 dark:text-gray-400">
+            Employee attendance overview
+        </p>
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
+            <p class="text-gray-500">Total Employees</p>
+            <h3 id="totalEmployees" class="text-3xl font-bold text-indigo-600">
+                0
+            </h3>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
+            <p class="text-gray-500">Present Today</p>
+            <h3 id="presentToday" class="text-3xl font-bold text-green-500">
+                0
+            </h3>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
+            <p class="text-gray-500">Absent Today</p>
+            <h3 id="absentToday" class="text-3xl font-bold text-red-500">
+                0
+            </h3>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
+            <p class="text-gray-500">Average Attendance</p>
+            <h3 id="averageAttendance"
+                class="text-3xl font-bold text-purple-500">
+                0%
+            </h3>
+        </div>
+
+    </div>
+
+
+    <!-- Overall Progress -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-6">
+
+        <div class="flex justify-between mb-2">
+            <h3 class="font-bold">Overall Attendance</h3>
+            <span id="overallPercent">0%</span>
+        </div>
+
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+            <div id="progressBar"
+                class="bg-indigo-600 h-4 rounded-full transition-all"
+                style="width:0%">
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Quick Info -->
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+            <h3 class="text-xl font-bold mb-4">
+                🏆 Top Attendance
+            </h3>
+
+            <div id="topEmployee">
+                No data available
+            </div>
+
+        </div>
+
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+            <h3 class="text-xl font-bold mb-4">
+                ⚠️ Low Attendance
+            </h3>
+
+            <div id="lowEmployees">
+                No employees below 75%
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= ATTENDANCE ================= -->
+<section id="attendance" class="tab-content hidden">
+
+    <div class="flex flex-col md:flex-row justify-between gap-4 mb-5">
+
+        <div>
+            <h2 class="text-2xl font-bold">
+                👥 Daily Attendance
+            </h2>
+
+            <p class="text-gray-500">
+                Click the button to mark Present / Absent
+            </p>
+        </div>
+
+        <input
+            type="text"
+            id="searchAttendance"
+            placeholder="🔍 Search employee..."
+            onkeyup="renderAttendance()"
+            class="border rounded-lg px-4 py-2 dark:bg-gray-800">
+    </div>
+
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
+
+        <table class="w-full text-left">
+
+            <thead class="bg-indigo-600 text-white">
+
+                <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Employee</th>
+                    <th class="p-4">Today's Attendance</th>
+                    <th class="p-4">Present</th>
+                    <th class="p-4">Absent</th>
+                    <th class="p-4">Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="attendanceTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= PERCENTAGE ================= -->
+<section id="percentage" class="tab-content hidden">
+
+    <div class="mb-5">
+
+        <h2 class="text-2xl font-bold">
+            📈 Attendance Percentage
+        </h2>
+
+        <p class="text-gray-500">
+            Attendance percentage is calculated automatically.
+        </p>
+
+    </div>
+
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
+
+        <table class="w-full text-left">
+
+            <thead class="bg-purple-600 text-white">
+
+                <tr>
+                    <th class="p-4">Employee</th>
+                    <th class="p-4">Present</th>
+                    <th class="p-4">Absent</th>
+                    <th class="p-4">Total Days</th>
+                    <th class="p-4">Percentage</th>
+                    <th class="p-4">Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="percentageTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= EMPLOYEES ================= -->
+<section id="employees" class="tab-content hidden">
+
+    <h2 class="text-2xl font-bold mb-5">
+        ➕ Manage Employees
+    </h2>
+
+
+    <!-- Add Employee Form -->
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6">
+
+        <div class="grid md:grid-cols-3 gap-4">
+
+            <input
+                id="employeeId"
+                type="text"
+                placeholder="Employee ID"
+                class="border rounded-lg p-3 dark:bg-gray-700">
+
+            <input
+                id="employeeName"
+                type="text"
+                placeholder="Employee Name"
+                class="border rounded-lg p-3 dark:bg-gray-700">
+
+            <button
+                onclick="addEmployee()"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold">
+                ➕ Add Employee
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Employee List -->
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
+
+        <table class="w-full text-left">
+
+            <thead class="bg-gray-800 text-white">
+
+                <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Name</th>
+                    <th class="p-4">Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="employeeTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= REPORT ================= -->
+<section id="report" class="tab-content hidden">
+
+    <h2 class="text-2xl font-bold mb-5">
+        📅 Attendance Report
+    </h2>
+
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+            <h3 class="font-bold mb-4">
+                📋 Summary
+            </h3>
+
+            <p class="mb-3">
+                Total Employees:
+                <b id="reportTotal">0</b>
+            </p>
+
+            <p class="mb-3">
+                Average Attendance:
+                <b id="reportAverage">0%</b>
+            </p>
+
+            <p>
+                Employees Below 75%:
+                <b id="reportLow">0</b>
+            </p>
+
+        </div>
+
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+            <h3 class="font-bold mb-4">
+                💡 Attendance Rule
+            </h3>
+
+            <p class="text-gray-600 dark:text-gray-300">
+                Employees with attendance of 75% or above
+                are considered to have good attendance.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+// ================= DATA =================
+
+let employees = JSON.parse(localStorage.getItem("employees")) || [
+
+    {
+        id: "EMP001",
+        name: "Rahul Sharma",
+        present: 18,
+        absent: 2,
+        today: "P"
+    },
+
+    {
+        id: "EMP002",
+        name: "Priya Verma",
+        present: 17,
+        absent: 3,
+        today: "P"
+    },
+
+    {
+        id: "EMP003",
+        name: "Amit Patil",
+        present: 14,
+        absent: 6,
+        today: "A"
+    },
+
+    {
+        id: "EMP004",
+        name: "Sneha Joshi",
+        present: 19,
+        absent: 1,
+        today: "P"
+    },
+
+    {
+        id: "EMP005",
+        name: "Rohan Gupta",
+        present: 15,
+        absent: 5,
+        today: "A"
+    },
+
+    {
+        id: "EMP006",
+        name: "Neha Singh",
+        present: 16,
+        absent: 4,
+        today: "P"
+    },
+
+    {
+        id: "EMP007",
+        name: "Karan Mehta",
+        present: 12,
+        absent: 8,
+        today: "A"
+    },
+
+    {
+        id: "EMP008",
+        name: "Anjali Rao",
+        present: 19,
+        absent: 1,
+        today: "P"
+    }
+];
+
+
+
+// ================= SAVE DATA =================
+
+function saveData() {
+
+    localStorage.setItem(
+        "employees",
+        JSON.stringify(employees)
+    );
+
+}
+
+
+
+// ================= SHOW TAB =================
+
+function showTab(tabName) {
+
+    document.querySelectorAll(".tab-content")
+        .forEach(section => {
+
+            section.classList.add("hidden");
+
+        });
+
+
+    document.getElementById(tabName)
+        .classList.remove("hidden");
+
+
+    updateAll();
+
+}
+
+
+
+// ================= ATTENDANCE TABLE =================
+
+function renderAttendance() {
+
+    let search =
+        document.getElementById("searchAttendance")
+        .value
+        .toLowerCase();
+
+
+    let html = "";
+
+
+    employees
+        .filter(emp =>
+            emp.name.toLowerCase().includes(search) ||
+            emp.id.toLowerCase().includes(search)
+        )
+        .forEach((emp, index) => {
+
+            html += `
+
+            <tr class="border-b dark:border-gray-700">
+
+                <td class="p-4">
+                    ${emp.id}
+                </td>
+
+                <td class="p-4 font-semibold">
+                    ${emp.name}
+                </td>
+
+                <td class="p-4">
+
+                    <span class="${
+                        emp.today === "P"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    } px-3 py-1 rounded-full font-bold">
+
+                        ${emp.today === "P"
+                            ? "Present"
+                            : "Absent"}
+
+                    </span>
+
+                </td>
+
+                <td class="p-4 text-green-600 font-bold">
+                    ${emp.present}
+                </td>
+
+                <td class="p-4 text-red-600 font-bold">
+                    ${emp.absent}
+                </td>
+
+                <td class="p-4">
+
+                    <button
+                        onclick="toggleAttendance(${index})"
+                        class="bg-indigo-600 text-white px-3 py-2 rounded-lg">
+
+                        ${
+                            emp.today === "P"
+                            ? "Mark Absent"
+                            : "Mark Present"
+                        }
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        });
+
+
+    document.getElementById("attendanceTable")
+        .innerHTML = html;
+
+}
+
+
+
+// ================= TOGGLE ATTENDANCE =================
+
+function toggleAttendance(index) {
+
+    let emp = employees[index];
+
+
+    if (emp.today === "P") {
+
+        emp.today = "A";
+
+        emp.present--;
+
+        emp.absent++;
+
+    }
+    else {
+
+        emp.today = "P";
+
+        emp.present++;
+
+        emp.absent--;
+
+    }
+
+
+    saveData();
+
+    updateAll();
+
+    alert("Attendance updated successfully!");
+
+}
+
+
+
+// ================= PERCENTAGE TABLE =================
+
+function renderPercentage() {
+
+    let html = "";
+
+
+    employees.forEach(emp => {
+
+        let total = emp.present + emp.absent;
+
+        let percentage =
+            total === 0
+            ? 0
+            : ((emp.present / total) * 100).toFixed(1);
+
+
+        let status;
+
+
+        if (percentage >= 75) {
+
+            status =
+                `<span class="text-green-600 font-bold">
+                    🟢 Good
+                </span>`;
+
+        }
+        else if (percentage >= 60) {
+
+            status =
+                `<span class="text-yellow-500 font-bold">
+                    🟡 Warning
+                </span>`;
+
+        }
+        else {
+
+            status =
+                `<span class="text-red-600 font-bold">
+                    🔴 Critical
+                </span>`;
+
+        }
+
+
+        html += `
+
+        <tr class="border-b dark:border-gray-700">
+
+            <td class="p-4 font-semibold">
+                ${emp.name}
+            </td>
+
+            <td class="p-4 text-green-600">
+                ${emp.present}
+            </td>
+
+            <td class="p-4 text-red-600">
+                ${emp.absent}
+            </td>
+
+            <td class="p-4">
+                ${total}
+            </td>
+
+            <td class="p-4 font-bold">
+                ${percentage}%
+            </td>
+
+            <td class="p-4">
+                ${status}
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    document.getElementById("percentageTable")
+        .innerHTML = html;
+
+}
+
+
+
+// ================= EMPLOYEE TABLE =================
+
+function renderEmployees() {
+
+    let html = "";
+
+
+    employees.forEach((emp, index) => {
+
+        html += `
+
+        <tr class="border-b dark:border-gray-700">
+
+            <td class="p-4">
+                ${emp.id}
+            </td>
+
+            <td class="p-4 font-semibold">
+                ${emp.name}
+            </td>
+
+            <td class="p-4">
+
+                <button
+                    onclick="deleteEmployee(${index})"
+                    class="bg-red-500 text-white px-3 py-2 rounded-lg">
+
+                    🗑️ Delete
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    document.getElementById("employeeTable")
+        .innerHTML = html;
+
+}
+
+
+
+// ================= ADD EMPLOYEE =================
+
+function addEmployee() {
+
+    let id =
+        document.getElementById("employeeId")
+        .value.trim();
+
+
+    let name =
+        document.getElementById("employeeName")
+        .value.trim();
+
+
+    if (id === "" || name === "") {
+
+        alert("Please enter Employee ID and Name.");
+
+        return;
+
+    }
+
+
+    employees.push({
+
+        id: id,
+
+        name: name,
+
+        present: 0,
+
+        absent: 0,
+
+        today: "A"
+
+    });
+
+
+    saveData();
+
+
+    document.getElementById("employeeId").value = "";
+
+    document.getElementById("employeeName").value = "";
+
+
+    updateAll();
+
+
+    alert("Employee added successfully!");
+
+}
+
+
+
+// ================= DELETE EMPLOYEE =================
+
+function deleteEmployee(index) {
+
+    if (
+        confirm("Are you sure you want to delete this employee?")
+    ) {
+
+        employees.splice(index, 1);
+
+        saveData();
+
+        updateAll();
+
+    }
+
+}
+
+
+
+// ================= DASHBOARD =================
+
+function updateDashboard() {
+
+    let totalEmployees =
+        employees.length;
+
+
+    let presentToday =
+        employees.filter(
+            emp => emp.today === "P"
+        ).length;
+
+
+    let absentToday =
+        totalEmployees - presentToday;
+
+
+    let totalPresent = 0;
+
+    let totalDays = 0;
+
+
+    employees.forEach(emp => {
+
+        totalPresent += emp.present;
+
+        totalDays += emp.present + emp.absent;
+
+    });
+
+
+    let average =
+        totalDays === 0
+        ? 0
+        : ((totalPresent / totalDays) * 100).toFixed(1);
+
+
+    document.getElementById("totalEmployees")
+        .innerText = totalEmployees;
+
+
+    document.getElementById("presentToday")
+        .innerText = presentToday;
+
+
+    document.getElementById("absentToday")
+        .innerText = absentToday;
+
+
+    document.getElementById("averageAttendance")
+        .innerText = average + "%";
+
+
+    document.getElementById("overallPercent")
+        .innerText = average + "%";
+
+
+    document.getElementById("progressBar")
+        .style.width = average + "%";
+
+
+    // Top employee
+
+    if (employees.length > 0) {
+
+        let sorted = [...employees].sort(
+            (a, b) =>
+                (b.present / (b.present + b.absent))
+                -
+                (a.present / (a.present + a.absent))
+        );
+
+
+        let top = sorted[0];
+
+
+        let topPercentage =
+            ((top.present /
+                (top.present + top.absent))
+                * 100)
+                .toFixed(1);
+
+
+        document.getElementById("topEmployee")
+            .innerHTML = `
+
+            <div class="flex justify-between">
+
+                <span class="font-semibold">
+                    🏆 ${top.name}
+                </span>
+
+                <span class="font-bold text-green-600">
+                    ${topPercentage}%
+                </span>
+
+            </div>
+
+            `;
+
+    }
+
+
+    // Low attendance
+
+    let low =
+        employees.filter(emp => {
+
+            let percentage =
+                (emp.present /
+                (emp.present + emp.absent))
+                * 100;
+
+            return percentage < 75;
+
+        });
+
+
+    document.getElementById("lowEmployees")
+        .innerHTML =
+        low.length === 0
+        ? "🎉 No employees below 75%"
+        : low.map(emp =>
+            `<p class="text-red-500 mb-2">
+                ⚠️ ${emp.name}
+            </p>`
+        ).join("");
+
+
+    // Report
+
+    document.getElementById("reportTotal")
+        .innerText = totalEmployees;
+
+
+    document.getElementById("reportAverage")
+        .innerText = average + "%";
+
+
+    document.getElementById("reportLow")
+        .innerText = low.length;
+
+}
+
+
+
+// ================= DARK MODE =================
+
+function toggleDarkMode() {
+
+    document.documentElement
+        .classList.toggle("dark");
+
+}
+
+
+
+// ================= UPDATE EVERYTHING =================
+
+function updateAll() {
+
+    renderAttendance();
+
+    renderPercentage();
+
+    renderEmployees();
+
+    updateDashboard();
+
+}
+
+
+
+// ================= INITIAL LOAD =================
+
+updateAll();
+
+</script>
+
+</body>
+</html>
